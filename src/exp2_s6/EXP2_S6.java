@@ -13,7 +13,6 @@ public class EXP2_S6 {
     static int capacidadAsientosPlateaAlta = 75 ;
     static int capacidadAsientosPalco = 75;
     static int opcionMenu = 0;
-    static int opcionUbicacion = 0;
   }
   
   static int asientosOcupadosVIP = (int)(Math.random() * 25 + 1);
@@ -25,10 +24,7 @@ public class EXP2_S6 {
   static int asientosDisponiblesPlateaBaja = variablesGlobales.capacidadAsientosPlateaBaja - asientosOcupadosPlateaBaja;
   static int asientosDisponiblesPlateaAlta = variablesGlobales.capacidadAsientosPlateaAlta - asientosOcupadosPlateaAlta;
   static int asientosDisponiblesPalco = variablesGlobales.capacidadAsientosPalco - asientosOcupadosPalco;
-  static int precioEntrada;
-  static int totalResumen = 0;
   static int totalPagarEntradas = 0;
-  static String ubicacionTexto;
   static int entradasVendidas = 0;
   
   static int cantidadEntradasParaComprar = 0;
@@ -42,6 +38,7 @@ public class EXP2_S6 {
       System.out.println("-----------------------------------------------------------");
       System.out.println("MENÚ VENTA ENTRADAS " + variablesGlobales.nombreTeatro.toUpperCase());
       System.out.println("-----------------------------------------------------------");
+      System.out.println("Ingresa en número correspondiente a la acción que quieres realizar.");
       System.out.println("[1]Revisar asientos disponibles");
       System.out.println("[2]Comprar Entradas");
       System.out.println("[3]Salir");
@@ -49,10 +46,19 @@ public class EXP2_S6 {
 
       variablesGlobales.opcionMenu = entradaUsuario.nextInt();
       
-    } while ( variablesGlobales.opcionMenu < 1 || variablesGlobales.opcionMenu > 3);
+      if(variablesGlobales.opcionMenu < 1 || variablesGlobales.opcionMenu > 3){
+        System.out.println("Has ingresado un número incorrecto para ejecutar la acción");
+      }
+      
+    } while ( variablesGlobales.opcionMenu < 1 || variablesGlobales.opcionMenu > 3 );
     
     
     do{
+      int opcionUbicacion = 0;
+      int precioEntrada = 0;
+      String ubicacionTexto = "";
+      int totalResumen = 0;
+      
       switch ( variablesGlobales.opcionMenu ) {
         
         // ENTRADAS DISPONIBLES
@@ -61,13 +67,16 @@ public class EXP2_S6 {
           System.out.println("---------------------------");
           System.out.println("El " + variablesGlobales.nombreTeatro + " tiene una capacidad de: " + variablesGlobales.capacidadAsientosTeatro + " asientos");
           System.out.println("Para la zona VIP existe una disponibilidad de: " + asientosDisponiblesVIP + " asientos");
-          System.out.println("Para la zona Platea Baja existe una disponibilidad de: " + asientosDisponiblesPlateaBaja + " asientos");
-          System.out.println("Para la zona Platea Alta existe una disponibilidad de: " + asientosDisponiblesPlateaAlta + " asientos");
-          System.out.println("Para la zona Palco existe una disponibilidad de: " + asientosDisponiblesPalco + " asientos");
+          System.out.println("Para Platea Baja existe una disponibilidad de: " + asientosDisponiblesPlateaBaja + " asientos");
+          System.out.println("Para Platea Alta existe una disponibilidad de: " + asientosDisponiblesPlateaAlta + " asientos");
+          System.out.println("Para Palco existe una disponibilidad de: " + asientosDisponiblesPalco + " asientos");
           
           do {
             System.out.println("\n[2]Comprar entradas [3]Salir");
             variablesGlobales.opcionMenu = entradaUsuario.nextInt();
+            if(variablesGlobales.opcionMenu != 2 && variablesGlobales.opcionMenu != 3){
+              System.out.println("Has ingresado un número incorrecto. Intenta nuevamente");
+            }
           
           } while (variablesGlobales.opcionMenu != 2 && variablesGlobales.opcionMenu != 3);
           
@@ -80,11 +89,15 @@ public class EXP2_S6 {
             System.out.println("Ingresa el número correspondiente a la ubicación");
             System.out.println("------------------------------------------------");
             System.out.println("[1]VIP [2]Platea Baja [3]Platea Alta [4]Palco");
-            variablesGlobales.opcionUbicacion = entradaUsuario.nextInt();
+            opcionUbicacion = entradaUsuario.nextInt();
+            
+            if(opcionUbicacion <= 0 || opcionUbicacion > 4){
+              System.out.println("Has ingresado un número incorrecto para elegir la entrada. Intenta nuevamente");
+            }
           
-          } while(variablesGlobales.opcionUbicacion == 0 || variablesGlobales.opcionUbicacion > 4);
+          } while(opcionUbicacion <= 0 || opcionUbicacion > 4);
 
-          switch (variablesGlobales.opcionUbicacion){
+          switch (opcionUbicacion){
             
             case 1:
               precioEntrada = 25000;
@@ -162,22 +175,32 @@ public class EXP2_S6 {
               break;
               
           }
-         
+          
           totalResumen = cantidadEntradasParaComprar * precioEntrada;
           entradasVendidas += cantidadEntradasParaComprar;
           
-          System.out.println("Resumen entrada actual");
-          System.out.println("-------------------------------------");
-          System.out.println("Ubicación: " + ubicacionTexto);
-          System.out.println("Precio Entrada: $" + precioEntrada);
-          System.out.println("Subtotal por " + cantidadEntradasParaComprar + " entradas es: $" + totalResumen);
-          
-          totalPagarEntradas += totalResumen;
-          
+          if(totalResumen != 0){
+            
+
+            System.out.println("Resumen entrada actual");
+            System.out.println("-------------------------------------");
+            System.out.println("Ubicación: " + ubicacionTexto);
+            System.out.println("Precio Entrada: $" + precioEntrada);
+            System.out.println("Subtotal por " + cantidadEntradasParaComprar + " entradas es: $" + totalResumen);
+
+            totalPagarEntradas += totalResumen;  
+          } else {
+            System.out.println("Esta ubicación no tiene asientos disponibles");
+          }
+             
+              
           //Menú para comprar otra entrada o pagar
           do {
-            System.out.println("\n[2]Comprar más entrada [3]Ver resumen y salir");
+            System.out.println("\n[2]Comprar más entrada [3]Terminar el proceso de compra");
             variablesGlobales.opcionMenu = entradaUsuario.nextInt();
+            if(variablesGlobales.opcionMenu != 2 && variablesGlobales.opcionMenu != 3){
+              System.out.println("Has ingresado un número incorrecto para continuar. Intenta nuevamente");
+            }
           
           } while (variablesGlobales.opcionMenu != 2 && variablesGlobales.opcionMenu != 3);
           
@@ -186,20 +209,21 @@ public class EXP2_S6 {
     
     } while(variablesGlobales.opcionMenu != 3); 
     
+    System.out.println("Entradas vendidas" + entradasVendidas);
+    
     if(entradasVendidas == 0){
       System.out.println("Has salido de la aplicación");
     
     } else {
       
       
-      
-      
       System.out.println("---------------------------------------------------------------------");
-      System.out.println("                       RESUMEN DE LA COMPRA                          ");
+      System.out.println("                                 BOLETA                              ");
       System.out.println("---------------------------------------------------------------------");
       System.out.println("El total a pagar por las " + entradasVendidas + " entradas es de: ");
       System.out.println("$" + totalPagarEntradas);
       System.out.println("---------------------------------------------------------------------");
+      System.out.println(" Disfruta de la obra de teatro \n");
     }
   }
 }
